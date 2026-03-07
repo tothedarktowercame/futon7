@@ -1,2 +1,5 @@
 {:paths ["src"]
- :deps {cheshire/cheshire {:mvn/version "5.13.0"}}}
+ :deps {cheshire/cheshire {:mvn/version "5.13.0"}}
+ :tasks {lead-report {:doc "Generate lead report from probe results"
+                      :requires ([f7.report :as report])
+                      :task (report/-main)}}}
