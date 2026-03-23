@@ -1,0 +1,507 @@
+;; UKRN Services Training Value Hypergraph
+;;
+;; This is the ground truth for the value model described in
+;; README-prolegomena.md. The four one-page briefs (Rows 7, 9, 13, 14)
+;; are view projections of this structure.
+;;
+;; Genealogy:
+;;   Krowne 2003 (participatory sustainability, Fig 16.1)
+;;   Corneli & Krowne 2005 (scholium-based document model)
+;;   Corneli 2026 (equity loop: Sen + Ostrom + Alexander)
+;;
+;; Annotations:
+;;   :timescale   — :fast, :medium, :slow, :glacial (Invariant I3)
+;;   :invariant   — which layer (I0–I4) this element maintains
+;;   :constraint  — true if this is a preference/design criterion (Invariant I4)
+;;   :view        — which row-deliverable(s) project through this element
+;;   :status      — :present, :absent, :nominal, :aspirational (current ORP state)
+
+{:mission/id :ukrns-value-model
+ :mission/state :design
+ :mission/date "2026-03-20"
+
+ ;; =====================================================================
+ ;; ACTORS — people with roles who flow through action arenas
+ ;; =====================================================================
+
+ :actors
+ [{:id :A-recipient
+   :name "Training recipient (T1)"
+   :type :actor
+   :gives #{:time :attention :interview-data}
+   :needs #{:capability-change :changed-practice}
+   :timescale :fast
+   :note "The terminal value node: if recipients don't learn, the system is null"}
+
+  {:id :A-trainer
+   :name "Trainer (T3)"
+   :type :actor
+   :gives #{:delivery :adaptation :materials-maintenance :peer-feedback}
+   :needs #{:recognition :development :career-credit :confidence}
+   :timescale :fast
+   :note "Currently absorbs 4-6 distributed roles (role overload finding)"}
+
+  {:id :A-institutional-lead
+   :name "Institutional lead"
+   :type :actor
+   :gives #{:rooms :time-allocation :legitimacy :workload-models}
+   :needs #{:evidence-of-impact}
+   :timescale :slow
+   :note "Provides the receiving structure — or doesn't"}
+
+  {:id :A-orca
+   :name "ORCA coordinator"
+   :type :actor
+   :gives #{:local-coordination :issue-routing :event-hosting}
+   :needs #{:training :clear-role-definition :institutional-backing}
+   :timescale :medium
+   :status :absent
+   :note "Most structurally important, least supported (all four transcripts)"}
+
+  {:id :A-evaluator
+   :name "Evaluator"
+   :type :actor
+   :gives #{:instrument-design :data-analysis :cross-institutional-synthesis}
+   :needs #{:interview-data :institutional-cooperation :time}
+   :timescale :medium
+   :status :absent
+   :note "The role whose absence breaks I1 and cascades to I4"}
+
+  {:id :A-cop-member
+   :name "CoP member"
+   :type :actor
+   :gives #{:practice-sharing :materials-review :peer-support}
+   :needs #{:content-worth-attending-for :governance-voice :capability-return}
+   :timescale :medium}
+
+  {:id :A-steering-group
+   :name "CoP steering group"
+   :type :actor
+   :gives #{:agenda-setting :review-cycles :advisory-role}
+   :needs #{:active-membership-base :mandate}
+   :timescale :slow
+   :status :absent
+   :note "The I6 fix: parallel governance tier preventing SPOF"}
+
+  {:id :A-ukrns
+   :name "UKRN Services"
+   :type :actor
+   :gives #{:coordination :curriculum :quality-assurance :brand}
+   :needs #{:revenue :reputation :demonstrable-quality}
+   :timescale :slow}]
+
+ ;; =====================================================================
+ ;; ACTION ARENAS — settings defined by shared practices
+ ;; A CoP is defined by its practices, not its meetings.
+ ;; Each arena is a hyperedge connecting actors, protocols, and outputs.
+ ;; =====================================================================
+
+ :arenas
+ [;; --- I0: Training produces capability change ---
+
+  {:id :AR-training-delivery
+   :name "Training delivery"
+   :type :action-arena
+   :practice "Adapted facilitation of open research content"
+   :invariant :I0
+   :timescale :fast
+   :actors #{:A-trainer :A-recipient}
+   :protocol :P-delivery-script
+   :inputs #{:adapted-materials :room :time-slot}
+   :outputs #{:recipient-experience :capability-change}
+   :view #{:row-7 :row-9}
+   :status :present
+   :note "The core fact. Everything else is infrastructure for this."}
+
+  ;; --- I1: Capability change is detectable ---
+
+  {:id :AR-exit-interview
+   :name "Exit interview"
+   :type :action-arena
+   :practice "Structured 15-20 min interview with training recipients"
+   :invariant :I1
+   :timescale :fast
+   :actors #{:A-evaluator :A-recipient}
+   :protocol :P-t1-instrument
+   :inputs #{:recipient-experience}
+   :outputs #{:interview-data :five-indicators :three-overlays}
+   :view #{:row-7 :row-9}
+   :status :absent
+   :note "Currently replaced by optional forms with near-zero response rate"}
+
+  ;; --- I2: Evidence reaches the people who need it ---
+
+  {:id :AR-evidence-sharing
+   :name "Evidence sharing"
+   :type :action-arena
+   :practice "CoP discusses real interview findings, not headcounts"
+   :invariant :I2
+   :timescale :medium
+   :actors #{:A-evaluator :A-cop-member :A-trainer :A-institutional-lead}
+   :protocol :P-evidence-presentation
+   :inputs #{:interview-data :cross-institutional-synthesis}
+   :outputs #{:shared-understanding :design-targets :institutional-evidence}
+   :view #{:row-9 :row-13 :row-14}
+   :status :absent
+   :note "The link that makes the CoP a learning community, not a seminar series"}
+
+  ;; --- I3: Feedback improves practice ---
+
+  {:id :AR-materials-workshop
+   :name "Materials review and adaptation"
+   :type :action-arena
+   :practice "Joint review, update, and adaptation of training materials"
+   :invariant :I3
+   :timescale :medium
+   :actors #{:A-cop-member :A-trainer}
+   :protocol :P-materials-review-cycle
+   :inputs #{:shared-understanding :current-materials :local-adaptations}
+   :outputs #{:updated-materials :upstream-contributions}
+   :view #{:row-13 :row-14}
+   :status :nominal
+   :note "Happens ad hoc ('a couple of colleagues have uploaded their slides') but not systematic"}
+
+  {:id :AR-mentoring
+   :name "Peer mentoring"
+   :type :action-arena
+   :practice "Experienced trainer paired with new trainer for first delivery cycle"
+   :invariant :I3
+   :timescale :medium
+   :actors #{:A-trainer :A-cop-member}
+   :protocol :P-mentoring-pairing
+   :inputs #{:delivery-experience :confidence-gap}
+   :outputs #{:trainer-confidence :supervisory-skills}
+   :view #{:row-14}
+   :status :absent}
+
+  {:id :AR-curriculum-development
+   :name "Curriculum development"
+   :type :action-arena
+   :practice "Collaborative development and testing of training curriculum"
+   :invariant :I3
+   :timescale :slow
+   :actors #{:A-cop-member :A-ukrns :A-evaluator}
+   :protocol :P-curriculum-cycle
+   :inputs #{:updated-materials :evidence-of-what-works :institutional-evidence}
+   :outputs #{:curriculum :course-offerings}
+   :view #{:row-14}
+   :status :absent}
+
+  ;; --- I4: The system sustains itself (equity loop closes) ---
+
+  {:id :AR-governance
+   :name "CoP governance"
+   :type :action-arena
+   :practice "Steering group sets agenda, reviews, advises on UKRN-S decisions"
+   :invariant :I4
+   :timescale :slow
+   :actors #{:A-steering-group :A-cop-member :A-ukrns}
+   :protocol :P-steering-cycle
+   :inputs #{:pulse-check-data :annual-review :contribution-log}
+   :outputs #{:agenda :review-cycle :advisory-input}
+   :view #{:row-14}
+   :status :absent
+   :note "Earned through contribution, not appointed by management (Ostrom)"}
+
+  {:id :AR-recognition
+   :name "Recognition and credit"
+   :type :action-arena
+   :practice "Making contribution visible and career-relevant"
+   :invariant :I4
+   :timescale :slow
+   :actors #{:A-trainer :A-cop-member :A-ukrns :A-institutional-lead}
+   :protocol :P-contribution-log
+   :inputs #{:contribution-records}
+   :outputs #{:named-credit :cpd-evidence :appraisal-statement}
+   :view #{:row-14}
+   :status :absent
+   :note "The Community Contributor badge exists but is not career-linked"}
+
+  {:id :AR-pulse-check
+   :name "Pulse check and annual review"
+   :type :action-arena
+   :practice "Three questions at a meetup + annual steering group review"
+   :invariant :I4
+   :timescale :slow
+   :actors #{:A-cop-member :A-steering-group}
+   :protocol :P-pulse-check
+   :inputs #{:member-experience}
+   :outputs #{:pulse-check-data :annual-review}
+   :view #{:row-14}
+   :status :absent
+   :note "Feedback on whether the equity loop itself is working"}]
+
+ ;; =====================================================================
+ ;; PROTOCOLS — the instruments, scripts, and procedures used in arenas
+ ;; =====================================================================
+
+ :protocols
+ [{:id :P-t1-instrument
+   :name "T1 interview instrument"
+   :type :protocol
+   :spec "6 core questions, 15-20 min, NPT-mapped"
+   :ref "t1_interview_instrument(2).docx"
+   :indicators [:coherence-depth :enactment :architectural-support
+                :material-durability :onward-transmission]
+   :overlays [:compliance :meaning :co-ownership]
+   :design-history {:octopus-2023 "Ambitious version via Octopus.ac, judged too complex"
+                    :current "Minimal viable: six questions in a conversation"}}
+
+  {:id :P-delivery-script
+   :name "Training delivery protocol"
+   :type :protocol
+   :spec "Adapted from T3 materials, fixed core + local electives"
+   :note "Pattern 1 (Confident Adaptation) + Pattern 2 (Protected Interaction)"}
+
+  {:id :P-materials-review-cycle
+   :name "Materials review cycle"
+   :type :protocol
+   :spec "Quarterly review, OER Commons, CC BY licensing"
+   :note "Pattern 3 (Shared Maintenance)"}
+
+  {:id :P-mentoring-pairing
+   :name "Mentoring protocol"
+   :type :protocol
+   :spec "One pairing per new trainer cohort, first delivery cycle"}
+
+  {:id :P-curriculum-cycle
+   :name "Curriculum development cycle"
+   :type :protocol
+   :spec "Annual review informed by evidence + CoP input"}
+
+  {:id :P-steering-cycle
+   :name "Steering group cycle"
+   :type :protocol
+   :spec "3-5 members, elected/rotated annually from active contributors"
+   :constraint true
+   :note "Governance earned through contribution threshold (Ostrom)"}
+
+  {:id :P-contribution-log
+   :name "Contribution log"
+   :type :protocol
+   :spec "Shared document recording sessions shared, materials reviewed, feedback given"}
+
+  {:id :P-evidence-presentation
+   :name "Evidence presentation protocol"
+   :type :protocol
+   :spec "Anonymised, aggregated interview findings presented at CoP meetings"}
+
+  {:id :P-pulse-check
+   :name "Pulse check protocol"
+   :type :protocol
+   :spec "Three questions: What's working? What isn't? What should change?"}]
+
+ ;; =====================================================================
+ ;; INVARIANTS — cross-cutting binding conditions, core out
+ ;; =====================================================================
+
+ :invariants
+ [{:id :I0
+   :name "Training produces capability change"
+   :type :invariant
+   :theory {:sen "conversion factors"}
+   :krowne "Participatory sustainability: if people do not use it, the system is of no benefit"
+   :s-r nil
+   :test "T1 exit interviews show enacted change, not just awareness"
+   :note "The core fact. If this doesn't hold, everything above is vacuous."}
+
+  {:id :I1
+   :name "Capability change is detectable"
+   :type :invariant
+   :theory {:npt "Pattern 5 / Visible Impact, NPT 4.2 Communal Appraisal"}
+   :krowne "Self-regulation: monitoring undertaken by community members themselves"
+   :s-r :self-regulation
+   :test "Five indicators discriminate cases; overlays distinguish compliance from meaning"
+   :note "Without detection, the system is flying blind"}
+
+  {:id :I2
+   :name "Evidence reaches the people who need it"
+   :type :invariant
+   :theory {:ostrom "Monitoring as governance function"}
+   :krowne "Self-reliance: members find information from interactions with each other"
+   :s-r :self-reliance
+   :test "CoP meetings have substantive content derived from interview data"
+   :note "Detection that stays in a filing cabinet is not feedback"}
+
+  {:id :I3
+   :name "Feedback improves practice"
+   :type :invariant
+   :theory {:alexander "Pattern resolution from recurrent tensions"}
+   :krowne "Self-regeneration: community can replenish content and extend infrastructure"
+   :s-r :self-regeneration
+   :test "Updated materials, changed delivery, curriculum reflects evidence"
+   :note "The system learns"}
+
+  {:id :I4
+   :name "The system sustains itself"
+   :type :invariant
+   :theory {:equity-loop "Sen + Ostrom + Alexander synthesised in equity.tex"}
+   :krowne "Participatory sustainability is the one leg you cannot remove"
+   :s-r [:self-reliance :self-regulation :self-regeneration]
+   :test "Contribution log widens; steering group rotates; pulse checks show loop closure"
+   :constraint true
+   :timescale :glacial
+   :note "The equity loop closes: contribution → governance → capability → contribution"}]
+
+ ;; =====================================================================
+ ;; EDGES — typed flows connecting actors, arenas, protocols, and outputs
+ ;; =====================================================================
+
+ :edges
+ [;; === I0 layer: the core fact ===
+
+  ;; Inputs to training delivery
+  {:from :A-trainer           :to :AR-training-delivery  :type :actor-enters   :role :facilitator}
+  {:from :A-recipient         :to :AR-training-delivery  :type :actor-enters   :role :participant}
+  {:from :P-delivery-script   :to :AR-training-delivery  :type :protocol}
+  {:from :A-institutional-lead :to :AR-training-delivery :type :resource       :role :provider
+   :provides #{:rooms :time-slot :legitimacy}}
+
+  ;; Training delivery outputs
+  {:from :AR-training-delivery :to :A-recipient          :type :value-flow     :value :capability-change}
+
+  ;; === I1 layer: detection ===
+
+  ;; Exit interview connects to training output
+  {:from :A-recipient         :to :AR-exit-interview     :type :actor-enters   :role :interviewee}
+  {:from :A-evaluator         :to :AR-exit-interview     :type :actor-enters   :role :interviewer}
+  {:from :P-t1-instrument     :to :AR-exit-interview     :type :protocol}
+
+  ;; Exit interview outputs
+  {:from :AR-exit-interview   :to :AR-evidence-sharing   :type :value-flow     :value :interview-data}
+
+  ;; === I2 layer: feedback flow ===
+
+  ;; Evidence sharing connects to multiple consumers
+  {:from :A-evaluator         :to :AR-evidence-sharing   :type :actor-enters   :role :presenter}
+  {:from :A-cop-member        :to :AR-evidence-sharing   :type :actor-enters   :role :discussant}
+  {:from :P-evidence-presentation :to :AR-evidence-sharing :type :protocol}
+
+  ;; Evidence flows to institutional leads (for justification)
+  {:from :AR-evidence-sharing :to :A-institutional-lead  :type :value-flow     :value :evidence-of-impact}
+  ;; Evidence flows to UKRN-S (for quality assurance)
+  {:from :AR-evidence-sharing :to :A-ukrns               :type :value-flow     :value :demonstrable-quality}
+
+  ;; === I3 layer: practice improvement ===
+
+  ;; Evidence sharing feeds improvement arenas
+  {:from :AR-evidence-sharing :to :AR-materials-workshop  :type :value-flow    :value :shared-understanding}
+  {:from :AR-evidence-sharing :to :AR-curriculum-development :type :value-flow  :value :design-targets}
+
+  ;; Materials workshop
+  {:from :A-cop-member        :to :AR-materials-workshop  :type :actor-enters  :role :reviewer}
+  {:from :A-trainer           :to :AR-materials-workshop  :type :actor-enters  :role :contributor
+   :provides #{:local-adaptations}}
+  {:from :P-materials-review-cycle :to :AR-materials-workshop :type :protocol}
+
+  ;; Materials workshop feeds back to training delivery (the improvement loop)
+  {:from :AR-materials-workshop :to :AR-training-delivery :type :value-flow    :value :updated-materials}
+
+  ;; Mentoring
+  {:from :A-cop-member        :to :AR-mentoring           :type :actor-enters  :role :mentor}
+  {:from :A-trainer           :to :AR-mentoring           :type :actor-enters  :role :mentee}
+  {:from :P-mentoring-pairing :to :AR-mentoring           :type :protocol}
+  {:from :AR-mentoring        :to :A-trainer              :type :value-flow    :value :confidence}
+  {:from :AR-mentoring        :to :A-cop-member           :type :value-flow    :value :supervisory-skills}
+
+  ;; Curriculum development
+  {:from :A-cop-member        :to :AR-curriculum-development :type :actor-enters :role :co-developer}
+  {:from :A-ukrns             :to :AR-curriculum-development :type :actor-enters :role :coordinator}
+  {:from :P-curriculum-cycle  :to :AR-curriculum-development :type :protocol}
+  {:from :AR-curriculum-development :to :AR-training-delivery :type :value-flow :value :curriculum}
+
+  ;; === I4 layer: equity loop closure ===
+
+  ;; Governance
+  {:from :A-steering-group    :to :AR-governance          :type :actor-enters  :role :decision-maker}
+  {:from :A-cop-member        :to :AR-governance          :type :actor-enters  :role :constituent}
+  {:from :A-ukrns             :to :AR-governance          :type :actor-enters  :role :advisee}
+  {:from :P-steering-cycle    :to :AR-governance          :type :protocol}
+  {:from :AR-governance       :to :AR-materials-workshop   :type :value-flow   :value :review-cycle}
+  {:from :AR-governance       :to :AR-curriculum-development :type :value-flow :value :advisory-input}
+
+  ;; Recognition
+  {:from :P-contribution-log  :to :AR-recognition         :type :protocol}
+  {:from :AR-recognition      :to :A-trainer              :type :value-flow    :value :career-credit}
+  {:from :AR-recognition      :to :A-cop-member           :type :value-flow    :value :named-credit}
+
+  ;; Pulse check feeds governance
+  {:from :A-cop-member        :to :AR-pulse-check         :type :actor-enters  :role :respondent}
+  {:from :A-steering-group    :to :AR-pulse-check         :type :actor-enters  :role :reviewer}
+  {:from :P-pulse-check       :to :AR-pulse-check         :type :protocol}
+  {:from :AR-pulse-check      :to :AR-governance          :type :value-flow    :value :pulse-check-data}
+
+  ;; === THE EQUITY LOOP (I4 closure) ===
+  ;; contribution → recognition → governance → capability return → contribution
+  ;; This is the cycle that must close for the system to sustain.
+
+  ;; All arenas generate contribution records
+  {:from :AR-training-delivery     :to :AR-recognition  :type :contribution  :value :delivery-record}
+  {:from :AR-materials-workshop    :to :AR-recognition  :type :contribution  :value :review-record}
+  {:from :AR-exit-interview        :to :AR-recognition  :type :contribution  :value :evaluation-record}
+  {:from :AR-mentoring             :to :AR-recognition  :type :contribution  :value :mentoring-record}
+  {:from :AR-evidence-sharing      :to :AR-recognition  :type :contribution  :value :sharing-record}
+
+  ;; Recognition feeds governance eligibility
+  {:from :AR-recognition :to :AR-governance :type :value-flow :value :earned-standing}
+
+  ;; Governance improves conditions (feeds back to arenas)
+  {:from :AR-governance  :to :AR-training-delivery :type :value-flow :value :improved-conditions}
+
+  ;; Capability return flows to actors
+  {:from :AR-mentoring             :to :A-trainer      :type :value-flow :value :capability-expansion}
+  {:from :AR-evidence-sharing      :to :A-cop-member   :type :value-flow :value :cross-institutional-exposure}
+  {:from :AR-recognition           :to :A-trainer      :type :value-flow :value :cpd-credit}]
+
+ ;; =====================================================================
+ ;; VIEW PROJECTIONS — which row-deliverable sees which subgraph
+ ;; =====================================================================
+
+ :views
+ {:row-7  {:name "Behaviour change indicators"
+           :layers #{:I0 :I1}
+           :arenas #{:AR-training-delivery :AR-exit-interview}
+           :key-claim "The T1 instrument IS the indicator system"}
+  :row-9  {:name "Evaluation report"
+           :layers #{:I0 :I1 :I2}
+           :arenas #{:AR-training-delivery :AR-exit-interview :AR-evidence-sharing}
+           :key-claim "The evidence trail across all layers"}
+  :row-13 {:name "Review ORP CoP"
+           :layers #{:I2 :I3 :I4}
+           :arenas #{:AR-evidence-sharing :AR-materials-workshop :AR-governance
+                     :AR-recognition :AR-pulse-check}
+           :key-claim "Diagnosis: which edges are broken"
+           :diagnosis :broken}
+  :row-14 {:name "CoP model"
+           :layers #{:I2 :I3 :I4}
+           :arenas #{:AR-evidence-sharing :AR-materials-workshop :AR-mentoring
+                     :AR-curriculum-development :AR-governance :AR-recognition
+                     :AR-pulse-check}
+           :key-claim "Design: the same edges repaired"
+           :diagnosis :repaired}}
+
+ ;; =====================================================================
+ ;; FAILURE MODE CORRESPONDENCE
+ ;; =====================================================================
+
+ :failure-modes
+ [{:id :FM-bottom-up
+   :krowne "Bottom-up failure: members don't participate"
+   :npt "Architectural mismatch"
+   :invariant-break :I0
+   :description "Training doesn't reach anyone or produces no capability change"
+   :observable "Empty sessions, zero practice change, recipients can't articulate OR"}
+
+  {:id :FM-top-down
+   :krowne "Top-down failure: administration buckles"
+   :npt "Absorbed input"
+   :invariant-break :I4
+   :description "System depends on heroic individuals; exits with the person"
+   :observable "Role overload: one person doing 4-6 roles. 'At some point I leave with that knowledge.'"}
+
+  {:id :FM-inside-out
+   :krowne "Inside-out failure: members leave en masse"
+   :npt nil
+   :invariant-break :I4
+   :description "Equity loop doesn't close; people exit for systems that value them"
+   :observable "CoP membership declines; best trainers stop volunteering"}]}
