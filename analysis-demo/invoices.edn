@@ -1,0 +1,248 @@
+{:title "Hyperreal Enterprises invoice ledger"
+ :description "Invoice line items as observations for posterior updating of the value-flow model. Each line maps to edge activations. Alignment quality is encoded in the weight pattern: high-alignment work activates upstream edges (method-validation, optionality-bank) alongside revenue."
+
+ :invoices
+ [;; =================================================================
+  ;; INVOICE #1 — 202501, 25 October 2025
+  ;; Early engagement: architecture understanding, first AI-assisted
+  ;; development, business development trips, PatCon30 conference.
+  ;; =================================================================
+  {:id :INV-202501
+   :invoice-no "202501"
+   :client "Oxford Brookes University — Learning Resources"
+   :date "2025-10-25"
+   :period "2025-09 to 2025-10"
+   :currency "GBP"
+   :lines
+   [{:date "2025-09-07"
+     :item "Technical meeting with lead developer"
+     :description "Meeting with Rich to understand VSAT architecture and dependencies. Discovered planned 'phase 1' was already standard."
+     :hours 1 :rate 75 :subtotal 75
+     :service-type :meeting
+     :edge-activations
+     [{:edge [:vsat-work :revenue]              :observed-weight 1}
+      {:edge [:futon-stack :vsat-work]          :observed-weight 2
+       :note "Understanding the codebase IS capability building"}
+      {:edge [:vsat-work :method-validation]    :observed-weight 2}]}
+
+    {:date "2025-09-19"
+     :item "Development meeting at Brookes"
+     :description "Meeting with project lead and developer. Plans for syntax highlighting, authoring/browsing separation, 360 audio, speculative 3D editing."
+     :hours 1 :rate 75 :subtotal 75
+     :service-type :meeting
+     :edge-activations
+     [{:edge [:vsat-work :revenue]              :observed-weight 1}
+      {:edge [:vsat-work :client-capability]    :observed-weight 2}
+      {:edge [:futon-stack :vsat-work]          :observed-weight 1}]}
+
+    {:date "2025-10-05"
+     :item "Bug fix via Codex AI-assisted development"
+     :description "Got VSAT running locally, used Codex for security review. Found and patched a cross-user text editing bug. Proof of concept for AI-assisted development."
+     :hours 1 :rate 75 :subtotal 75
+     :service-type :development
+     :alignment :high
+     :edge-activations
+     [{:edge [:vsat-work :revenue]              :observed-weight 1}
+      {:edge [:vsat-work :client-capability]    :observed-weight 3}
+      {:edge [:vsat-work :method-validation]    :observed-weight 4
+       :note "First proof that AI-assisted development works on this codebase"}
+      {:edge [:futon-stack :vsat-work]          :observed-weight 3}
+      {:edge [:method-validation :optionality-bank] :observed-weight 3
+       :note "AI-assisted development validated as transferable method"}]}
+
+    {:date "2025-10-08"
+     :item "ACMi business development meeting"
+     :description "Meeting with Jeff Munro at Arlington Community Media Inc. Use cases: hardware tutorials, community 360 storytelling, media gallery exhibits."
+     :hours 1 :rate 75 :subtotal 75
+     :service-type :business-development
+     :edge-activations
+     [{:edge [:vsat-work :revenue]              :observed-weight 1}
+      {:edge [:method-validation :optionality-bank] :observed-weight 2
+       :note "New potential client context widens optionality"}
+      {:edge [:vsat-work :published-knowledge]  :observed-weight 1}]}
+
+    {:date "2025-10-11"
+     :item "PatCon30 conference talks"
+     :description "Two talks at Akamai HQ, Cambridge MA. 'Alternative Infrastructures' contextualised VSAT for technical/STEM audience. 50+ warm contacts."
+     :hours 3 :rate 75 :subtotal 225
+     :service-type :dissemination
+     :alignment :very-high
+     :edge-activations
+     [{:edge [:vsat-work :revenue]              :observed-weight 3}
+      {:edge [:vsat-work :published-knowledge]  :observed-weight 5
+       :note "Conference presentation = published knowledge"}
+      {:edge [:method-validation :optionality-bank] :observed-weight 4
+       :note "50+ contacts = expanded network optionality"}
+      {:edge [:published-knowledge :ecosystem-benefit] :observed-weight 3}]}]
+
+   :total-hours 7
+   :total-revenue 525}
+
+  ;; =================================================================
+  ;; INVOICE #2 — 202502, 12 December 2025
+  ;; Middle phase: design meetings, narrative arcs feature,
+  ;; VSATLAS conceptual architecture document.
+  ;; =================================================================
+  {:id :INV-202502
+   :invoice-no "202502"
+   :client "Oxford Brookes University — Learning Resources"
+   :date "2025-12-12"
+   :period "2025-11 to 2025-12"
+   :currency "GBP"
+   :lines
+   [{:date "2025-11-12"
+     :item "Project meetings & design discussions (3 meetings)"
+     :description "In-person meetings exploring narrative arcs, community/AI integration, framing for current and future phases."
+     :hours 3 :rate 75 :subtotal 225
+     :service-type :meeting
+     :edge-activations
+     [{:edge [:vsat-work :revenue]              :observed-weight 3}
+      {:edge [:vsat-work :client-capability]    :observed-weight 3}
+      {:edge [:futon-stack :vsat-work]          :observed-weight 2}
+      {:edge [:vsat-work :method-validation]    :observed-weight 2}]}
+
+    {:date "2025-11-22"
+     :item "Narrative Arcs development"
+     :description "Technical development of VSAT narrative arc story summaries. Prototyping + PR on GitHub, now in production."
+     :hours 3 :rate 75 :subtotal 225
+     :service-type :development
+     :alignment :medium-high
+     :edge-activations
+     [{:edge [:vsat-work :revenue]              :observed-weight 3}
+      {:edge [:vsat-work :client-capability]    :observed-weight 3}
+      {:edge [:vsat-work :method-validation]    :observed-weight 3
+       :note "Feature development exercises FUTON methods in VSAT context"}
+      {:edge [:futon-stack :vsat-work]          :observed-weight 3}]}
+
+    {:date "2025-11-29"
+     :item "VSATLAS conceptual architecture & report"
+     :description "Design document outlining rationale and principles for VSATLAS extension. Includes business case. Builds on 'alternative infrastructures' work."
+     :hours 3 :rate 75 :subtotal 225
+     :service-type :analysis
+     :alignment :very-high
+     :edge-activations
+     [{:edge [:vsat-work :revenue]              :observed-weight 3}
+      {:edge [:vsat-work :client-capability]    :observed-weight 4}
+      {:edge [:vsat-work :method-validation]    :observed-weight 5
+       :note "Architecture design IS method validation — flexiarg thinking applied"}
+      {:edge [:vsat-work :published-knowledge]  :observed-weight 5
+       :note "Wiki page published as open design document"}
+      {:edge [:futon-stack :vsat-work]          :observed-weight 4}
+      {:edge [:method-validation :optionality-bank] :observed-weight 3}]}]
+
+   :total-hours 9
+   :total-revenue 675}
+
+  ;; =================================================================
+  ;; INVOICE #3 — 202503, 28 March 2026
+  ;; Full implementation phase: VSATLAS features, deployment,
+  ;; VR integration, Bayesian value chain analysis.
+  ;; =================================================================
+  {:id :INV-202503
+   :invoice-no "202503"
+   :client "Oxford Brookes University — Learning Resources"
+   :date "2026-03-28"
+   :period "2026-01 to 2026-03"
+   :currency "GBP"
+   :lines
+   [{:date "2026-01-09"
+     :item "Project meeting (VSATLAS, SimLab, VSATLATARIUM)"
+     :hours 1 :rate 75 :subtotal 75
+     :service-type :meeting
+     :edge-activations
+     [{:edge [:vsat-work :revenue]              :observed-weight 1}
+      {:edge [:vsat-work :client-capability]    :observed-weight 2}
+      {:edge [:futon-stack :vsat-work]          :observed-weight 1}]}
+
+    {:date "2026-03-05"
+     :item "Project meeting"
+     :hours 1 :rate 75 :subtotal 75
+     :service-type :meeting
+     :edge-activations
+     [{:edge [:vsat-work :revenue]              :observed-weight 1}
+      {:edge [:vsat-work :client-capability]    :observed-weight 2}]}
+
+    {:date "2026-03-19"
+     :item "VSATLAS development day 1"
+     :description "Story links with voting, pilot framework, stewardship role, VSATLATARIUM planetarium."
+     :hours 3 :rate 75 :subtotal 225
+     :service-type :development
+     :alignment :high
+     :edge-activations
+     [{:edge [:vsat-work :revenue]              :observed-weight 3}
+      {:edge [:vsat-work :client-capability]    :observed-weight 4}
+      {:edge [:vsat-work :method-validation]    :observed-weight 5}
+      {:edge [:futon-stack :vsat-work]          :observed-weight 4}]}
+
+    {:date "2026-03-20"
+     :item "VSATLAS development day 2"
+     :description "Continued implementation. Playwright e2e tests. AI-assisted with interactive QA."
+     :hours 3 :rate 75 :subtotal 225
+     :service-type :development
+     :alignment :high
+     :edge-activations
+     [{:edge [:vsat-work :revenue]              :observed-weight 3}
+      {:edge [:vsat-work :client-capability]    :observed-weight 3}
+      {:edge [:vsat-work :method-validation]    :observed-weight 5}
+      {:edge [:futon-stack :vsat-work]          :observed-weight 5}]}
+
+    {:date "2026-03-25"
+     :item "Project meeting"
+     :hours 1 :rate 75 :subtotal 75
+     :service-type :meeting
+     :edge-activations
+     [{:edge [:vsat-work :revenue]              :observed-weight 1}
+      {:edge [:vsat-work :client-capability]    :observed-weight 2}]}
+
+    {:date "2026-03-25"
+     :item "Linode demo deployment & hardening"
+     :description "Docker Compose, nginx HTTPS proxy, container limits, layout caching."
+     :hours 2.5 :rate 75 :subtotal 187.50
+     :service-type :deployment
+     :alignment :medium
+     :edge-activations
+     [{:edge [:vsat-work :revenue]              :observed-weight 2}
+      {:edge [:vsat-work :client-capability]    :observed-weight 3}
+      {:edge [:futon-stack :vsat-work]          :observed-weight 2}]}
+
+    {:date "2026-03-27"
+     :item "WebXR / Quest 2 VR integration"
+     :description "VR headset navigation, WebXR session management, Quest 2 controllers, photosphere overlay."
+     :hours 3 :rate 75 :subtotal 225
+     :service-type :development
+     :alignment :high
+     :edge-activations
+     [{:edge [:vsat-work :revenue]              :observed-weight 3}
+      {:edge [:vsat-work :client-capability]    :observed-weight 2}
+      {:edge [:vsat-work :method-validation]    :observed-weight 4}
+      {:edge [:futon-stack :vsat-work]          :observed-weight 3}]}
+
+    {:date "2026-03-28"
+     :item "Value chain analysis, Bayesian modelling & wiki architecture"
+     :description "VSATLATARIUM + VSATELIER wiki pages, Clojure/fastmath Bayesian pipeline, value-flow network model, editorial revision."
+     :hours 5 :rate 75 :subtotal 375
+     :service-type :analysis
+     :alignment :very-high
+     :edge-activations
+     [{:edge [:vsat-work :revenue]              :observed-weight 5}
+      {:edge [:vsat-work :client-capability]    :observed-weight 4}
+      {:edge [:vsat-work :method-validation]    :observed-weight 7
+       :note "Bayesian value-flow modelling IS the method being validated"}
+      {:edge [:vsat-work :published-knowledge]  :observed-weight 6}
+      {:edge [:futon-stack :vsat-work]          :observed-weight 5}
+      {:edge [:method-validation :optionality-bank] :observed-weight 4
+       :note "Pipeline reusable for Hyperreal-level model"}]}]
+
+   :total-hours 19.5
+   :total-revenue 1462.50}]
+
+ ;; =================================================================
+ ;; SUMMARY
+ ;; =================================================================
+ :cumulative
+ {:total-invoices 3
+  :total-hours 35.5
+  :total-revenue 2662.50
+  :period "2025-09 to 2026-03"
+  :hourly-rate 75
+  :note "All revenue from single client (Oxford Brookes). UKRNS and other engagements not yet active."}}

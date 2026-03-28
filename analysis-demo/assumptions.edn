@@ -1,0 +1,231 @@
+{:title "Hyperreal Enterprises value-flow model"
+ :description "Capability-growth model for Hyperreal Enterprises, derived from the Grand Unified Placemat (Krowne Prism). The objective function is capability accumulation across the FUTON stack. Revenue is a catalytic constraint: enough must flow to sustain the work, but the steering variable is upstream capability, not downstream revenue."
+ :date "2026-03-28"
+ :provenance "grand-unified-placemat.edn"
+
+ ;; =====================================================================
+ ;; The causal loop this model tracks:
+ ;;
+ ;;   capability growth → expanded optionality →
+ ;;     stronger client alignment → revenue with less time →
+ ;;       more time for capability growth → ...
+ ;;
+ ;; Revenue is a catalyst, not an objective. High-alignment billable
+ ;; hours (where the paid work also grows capability) are the sign
+ ;; that the loop is closing. The model tracks both dimensions.
+ ;; =====================================================================
+
+ :value-network
+ {:nodes
+  [;; UPSTREAM: capability growth (the actual objective)
+   {:id :futon-stack
+    :label "FUTON stack"
+    :x 60  :y 70
+    :group :upstream
+    :note "Invariant architecture, pattern library, tooling. The capability bank."}
+
+   {:id :method-validation
+    :label "Method validation"
+    :x 60  :y 190
+    :group :upstream
+    :note "Methods exercised in real contexts. Each use either validates or reveals gaps."}
+
+   {:id :optionality-bank
+    :label "Optionality bank"
+    :x 60  :y 310
+    :group :upstream
+    :note "Breadth of domains the capability can serve. Grows with each validated method."}
+
+   ;; MIDDLE: where upstream meets downstream (alignment zone)
+   {:id :vsat-work
+    :label "VSAT work"
+    :x 300 :y 70
+    :group :alignment
+    :note "Client work that also grows capability. High alignment = loop closing."}
+
+   {:id :ukrns-work
+    :label "UKRNS work"
+    :x 300 :y 170
+    :group :alignment
+    :note "Evaluation work that exercises methods and produces publishable evidence."}
+
+   {:id :other-engagements
+    :label "Other engagements"
+    :x 300 :y 280
+    :group :alignment
+    :note "Future consulting, method transfer, steward training. Currently aspirational."}
+
+   ;; DOWNSTREAM: what the work produces
+   {:id :revenue
+    :label "Revenue"
+    :x 540 :y 50
+    :group :catalyst
+    :note "The catalytic constraint. Enough to sustain, not the thing to maximise."}
+
+   {:id :client-capability
+    :label "Client capability"
+    :x 540 :y 140
+    :group :downstream
+    :note "Partners gain stewards, installations, governance. Downstream of alignment."}
+
+   {:id :published-knowledge
+    :label "Published knowledge"
+    :x 540 :y 240
+    :group :downstream
+    :note "OER, papers, open source, wiki. Returns to the commons."}
+
+   {:id :ecosystem-benefit
+    :label "Ecosystem benefit"
+    :x 540 :y 340
+    :group :downstream
+    :note "Broader community effects. The public spillover."}]
+
+  :group-semantics
+  {:upstream   "Capability growth — the objective function"
+   :alignment  "Where capability meets paid work — the control variable"
+   :catalyst   "Revenue — sustains the cycle but does not steer it"
+   :downstream "What flows to partners, public, ecosystem"}}
+
+ ;; =====================================================================
+ ;; SCENARIOS — phases of the capability growth cycle
+ ;; =====================================================================
+
+ :scenarios
+ [{:id :current-q1-2026
+   :model "Current state (Q1 2026)"
+   :comment "Single high-alignment client. FUTON methods in active use. Revenue modest but alignment strong."
+   :period "2026-01 to 2026-03"
+   :engagements 1
+   :billable-hours 19.5
+   :hourly-rate 75
+   :other-revenue 0
+   :fixed-cost 0
+   :alignment-ratio 0.85
+   :value-flows
+   [;; Upstream: capability feeds into work
+    {:from :futon-stack       :to :method-validation     :weight 6
+     :warrant "Stack methods exercised through VSAT deliverables"}
+    {:from :futon-stack       :to :vsat-work             :weight 5
+     :warrant "Flexiarg patterns, Bayesian modelling, Clojure pipeline — all FUTON methods deployed in paid work"}
+    {:from :method-validation :to :optionality-bank      :weight 4
+     :warrant "Each validated method widens what's possible next"}
+
+    ;; Alignment zone: work that grows capability AND earns revenue
+    {:from :vsat-work         :to :revenue               :weight 7
+     :warrant "£1,462.50 invoiced this quarter"}
+    {:from :vsat-work         :to :client-capability     :weight 5
+     :warrant "Demo deployed, wiki written, Eric gains VSATLAS understanding"}
+    {:from :vsat-work         :to :method-validation     :weight 6
+     :warrant "Value-chain analysis, VR integration, deployment — all test methods under real constraints"}
+    {:from :vsat-work         :to :published-knowledge   :weight 6
+     :warrant "Wiki pages, open code, Bayesian pipeline — all published"}
+
+    ;; Revenue feeds back upstream (the catalytic loop)
+    {:from :revenue           :to :futon-stack           :weight 4
+     :warrant "Revenue buys time for stack development"}
+
+    ;; Downstream flows
+    {:from :client-capability :to :ecosystem-benefit     :weight 2
+     :warrant "Early stage — one client, limited downstream"}
+    {:from :published-knowledge :to :ecosystem-benefit   :weight 4
+     :warrant "Open content available, small readership"}
+    {:from :published-knowledge :to :optionality-bank    :weight 3
+     :warrant "Publications make capability visible to potential future clients/collaborators"}
+
+    ;; UKRNS and other not yet active
+    ]}
+
+  {:id :year-1-target
+   :model "Phase 1"
+   :comment "VSAT + UKRNS active. Two alignment channels exercising different methods. Optionality bank growing."
+   :period "2026-04 to 2026-09"
+   :engagements 3
+   :billable-hours 120
+   :hourly-rate 75
+   :other-revenue 15000
+   :fixed-cost 5000
+   :alignment-ratio 0.75
+   :value-flows
+   [{:from :futon-stack       :to :method-validation     :weight 7}
+    {:from :futon-stack       :to :vsat-work             :weight 5}
+    {:from :futon-stack       :to :ukrns-work            :weight 5
+     :warrant "FUTON methods support rigorous evaluation design"}
+    {:from :method-validation :to :optionality-bank      :weight 6
+     :warrant "Methods now tested in two independent contexts"}
+
+    {:from :vsat-work         :to :revenue               :weight 5}
+    {:from :vsat-work         :to :client-capability     :weight 6}
+    {:from :vsat-work         :to :method-validation     :weight 5}
+    {:from :vsat-work         :to :published-knowledge   :weight 5}
+
+    {:from :ukrns-work        :to :revenue               :weight 4
+     :warrant "Research England funding covers evaluation work"}
+    {:from :ukrns-work        :to :client-capability     :weight 5
+     :warrant "Evaluation process trains T1 interviewers, builds CoP"}
+    {:from :ukrns-work        :to :method-validation     :weight 6
+     :warrant "Evaluation is the acid test for the methods"}
+    {:from :ukrns-work        :to :published-knowledge   :weight 6
+     :warrant "Evaluation findings become publications and patterns"}
+
+    {:from :revenue           :to :futon-stack           :weight 5}
+    {:from :client-capability :to :ecosystem-benefit     :weight 4}
+    {:from :published-knowledge :to :ecosystem-benefit   :weight 5}
+    {:from :published-knowledge :to :optionality-bank    :weight 5}]}
+
+  {:id :year-2-mature
+   :model "Phase 2"
+   :comment "Optionality bank large enough that new engagements are attracted by reputation. Method transfer demonstrated. Revenue constraint easily satisfied."
+   :period "2026-10 to 2027-03"
+   :engagements 6
+   :billable-hours 300
+   :hourly-rate 75
+   :other-revenue 30000
+   :fixed-cost 12000
+   :alignment-ratio 0.80
+   :value-flows
+   [{:from :futon-stack       :to :method-validation     :weight 7}
+    {:from :futon-stack       :to :vsat-work             :weight 4}
+    {:from :futon-stack       :to :ukrns-work            :weight 5}
+    {:from :futon-stack       :to :other-engagements     :weight 5
+     :warrant "Optionality bank now wide enough to serve new domains"}
+    {:from :method-validation :to :optionality-bank      :weight 8
+     :warrant "Three+ contexts validated — methods are genuinely transferable"}
+
+    {:from :vsat-work         :to :revenue               :weight 4}
+    {:from :vsat-work         :to :client-capability     :weight 7}
+    {:from :vsat-work         :to :method-validation     :weight 4}
+    {:from :vsat-work         :to :published-knowledge   :weight 4}
+
+    {:from :ukrns-work        :to :revenue               :weight 5}
+    {:from :ukrns-work        :to :client-capability     :weight 6}
+    {:from :ukrns-work        :to :method-validation     :weight 5}
+    {:from :ukrns-work        :to :published-knowledge   :weight 7}
+
+    {:from :other-engagements :to :revenue               :weight 5
+     :warrant "Method reputation generates inbound consulting"}
+    {:from :other-engagements :to :method-validation     :weight 6
+     :warrant "New domains stress-test methods differently"}
+    {:from :other-engagements :to :published-knowledge   :weight 4}
+
+    {:from :revenue           :to :futon-stack           :weight 6
+     :warrant "Revenue constraint easily met — most time goes to capability growth"}
+    {:from :client-capability :to :ecosystem-benefit     :weight 6}
+    {:from :published-knowledge :to :ecosystem-benefit   :weight 6}
+    {:from :published-knowledge :to :optionality-bank    :weight 6}
+    {:from :optionality-bank  :to :other-engagements     :weight 5
+     :warrant "Optionality feeds new engagement opportunities"}]}]
+
+ ;; =====================================================================
+ ;; DERIVED DIMENSIONS
+ ;;
+ ;; Different from VSAT: the primary axis is upstream capability,
+ ;; not downstream capture.
+ ;; =====================================================================
+
+ :group-order [:upstream :catalyst :downstream]
+
+ :group-label
+ {:upstream   "Capability growth"
+  :alignment  "Alignment quality"
+  :catalyst   "Revenue (catalyst)"
+  :downstream "Downstream benefit"}}
