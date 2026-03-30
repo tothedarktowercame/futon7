@@ -148,8 +148,8 @@
    :value-flows
    [{:from :futon-stack       :to :method-validation     :weight 7}
     {:from :futon-stack       :to :vsat-work             :weight 5}
-    {:from :futon-stack       :to :ukrns-work            :weight 5
-     :warrant "FUTON methods support rigorous evaluation design"}
+    {:from :futon-stack       :to :ukrns-work            :weight 6
+     :warrant "Bayesian population model (gate/support over 16 NPT factors, 9 institutions) built using same Clay pipeline as VSAT value chains. Method generalises to evaluation context."}
     {:from :method-validation :to :optionality-bank      :weight 6
      :warrant "Methods now tested in two independent contexts"}
 
@@ -159,13 +159,13 @@
     {:from :vsat-work         :to :published-knowledge   :weight 5}
 
     {:from :ukrns-work        :to :revenue               :weight 4
-     :warrant "Research England funding covers evaluation work"}
+     :warrant "Research England funding covers evaluation work; UKRN WP demonstrates deliverable value"}
     {:from :ukrns-work        :to :client-capability     :weight 5
-     :warrant "Evaluation process trains T1 interviewers, builds CoP"}
-    {:from :ukrns-work        :to :method-validation     :weight 6
-     :warrant "Evaluation is the acid test for the methods"}
-    {:from :ukrns-work        :to :published-knowledge   :weight 6
-     :warrant "Evaluation findings become publications and patterns"}
+     :warrant "Population model identifies per-institution levers; T1 instrument measures capability change at recipient level"}
+    {:from :ukrns-work        :to :method-validation     :weight 7
+     :warrant "NPT-based population model validates that gate/support Bayesian pipeline generalises beyond financial value-chains to institutional evaluation — the most important open question answered"}
+    {:from :ukrns-work        :to :published-knowledge   :weight 7
+     :warrant "Working paper appendix with population heatmap + MC distributions; participant profiles grounded in transcript evidence; assumptions-v2.edn fully declarative"}
 
     {:from :revenue           :to :futon-stack           :weight 5}
     {:from :client-capability :to :ecosystem-benefit     :weight 4}
@@ -213,7 +213,13 @@
     {:from :published-knowledge :to :ecosystem-benefit   :weight 6}
     {:from :published-knowledge :to :optionality-bank    :weight 6}
     {:from :optionality-bank  :to :other-engagements     :weight 5
-     :warrant "Optionality feeds new engagement opportunities"}]}]
+     :warrant "Optionality feeds new engagement opportunities"}
+
+    ;; Cross-context evaluation via shared story surfaces
+    {:from :client-capability :to :method-validation     :weight 4
+     :warrant "Clients sharing structured accounts of their experience validates methods in new contexts — the network IS the evaluation"}
+    {:from :client-capability :to :published-knowledge   :weight 3
+     :warrant "Client stories are publishable evidence of method transfer without requiring formal research"}]}]
 
  ;; =====================================================================
  ;; DERIVED DIMENSIONS
