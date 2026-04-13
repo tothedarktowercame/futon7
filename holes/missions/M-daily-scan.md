@@ -250,6 +250,49 @@ each other. Without the War Machine's framework, the scan is just a
 cron job. Without the scan's data, the War Machine's frame has a
 zero-valued port.
 
+### Q6: Publication as consulting surface
+
+The briefs should be **published** on the Hyperreal Enterprises
+website (futon7a, `hyperreal.enterprises` or equivalent) as blog
+posts, not just stored as EDN. Reasons:
+
+1. **Public signal:** Demonstrates capability to prospects. "Here's
+   what I found interesting in knowledge graphs / AI tooling /
+   reproducibility today" is a natural consulting-adjacent format.
+2. **Content trail:** Builds a searchable archive that prospects
+   can find via search engines.
+3. **Grant→pitch transfer:** Joe's grant writing experience (UKRN,
+   EPSRC, etc.) is directly transferable. "This grant proposal
+   could have been a consulting pitch" — the skill is framing
+   capability in terms of the recipient's problem. The daily brief
+   is practice for this skill.
+4. **Accountability:** Publishing forces quality — you don't publish
+   a brief that's just a list of repos. You write a sentence about
+   why each item matters.
+
+**Format:** Short blog post (200-400 words) with:
+- 3-5 items from the scan
+- For each: what it is, why it matters, what Joe could offer
+- A "capacity note" linking to relevant demonstrations (UKRN-S
+  delivery, vsatelier, WebArxana, etc.)
+
+**Infrastructure note:** futon7a (Hyperreal website repo) is not
+present on this machine. It needs to be cloned or created. This is
+a dependency for the publication step but NOT for the scan itself —
+Day 1 can produce the brief locally; publication can start Day 2+.
+
+### Q7: Existing consulting artefacts
+
+| Artefact | Location | Relevance |
+|----------|----------|-----------|
+| VSAT consulting work | ~/vsat/ | Current paid work — demonstrates delivery |
+| VSAT wiki / ideation | ~/vsat.wiki/ | Methodology, patterns, demos |
+| UKRN-S Working Paper | ~/vsat.wiki/ukrn-demo/ | Capability demo in progress (uncommitted) |
+| Hyperreal website | futon7a (NOT on this machine) | Publication surface for briefs |
+| Lead report (M-f7-lead-report) | futon7/analysis-demo/ | One-shot version — reference for format |
+| Invoice ledger | futon7/analysis-demo/invoices.edn | Revenue history — baseline for 20h/month test |
+| Value-flow model | futon7/analysis-demo/value-model.md | Hyperreal business model analysis |
+
 ### Ready vs Missing
 
 | Component | Status | Work needed |
@@ -261,7 +304,9 @@ zero-valued port.
 | Cache layer | Ready | None |
 | Delta detection | Missing | Compare today's results to yesterday's cache |
 | Daily brief renderer | Missing | Markdown template with delta, top-3, capacity match |
+| Blog post formatter | Missing | Convert brief to publishable post |
 | `bb daily-scan` task | Missing | Wire delta + brief into bb task |
 | Evidence emission | Missing | POST to futon1a after each brief |
 | Emacs integration | Missing | `M-x f7-daily-brief` command |
+| futon7a (website repo) | Missing on machine | Clone or create — needed for publication |
 | 20-day tracking | Missing | Simple log of days completed + outcomes |
