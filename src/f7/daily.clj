@@ -155,9 +155,13 @@
                          (when (seq tag) (str " [" tag "]"))
                          "\n"
                          "- **Probes:** " (:probe-count item)
-                         " | **Score:** " (:total-score item) "\n"
+                         " | **Score:** " (:total-score item)
+                         " | **In:** " (str/join ", " (:probes item)) "\n"
                          "- **Signals:** "
-                         (str/join ", " (map :signal (mapcat :hard (:all-hard-signals item))))
+                         (str/join ", " (->> (:all-hard-signals item)
+                                             (filter :present?)
+                                             (map #(str (name (:signal %))
+                                                        (when (:detail %) (str " (" (:detail %) ")"))))))
                          "\n"
                          "- **Capacity match:** _TODO — what could Joe offer here?_\n")))
                 top))
