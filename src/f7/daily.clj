@@ -10,6 +10,7 @@
      bb daily-scan --dry-run    ; show what would be scanned without API calls"
   (:require [f7.core :as core]
             [f7.probes :as probes]
+            [f7.probe-expansion :as expansion]
             [f7.report :as report]
             [clojure.java.io :as io]
             [clojure.string :as str]
@@ -55,7 +56,10 @@
         path (scan-path date)]
     (io/make-parents path)
     (println (str "=== Daily scan: " date " ==="))
-    (let [probe-list probes/all-probes
+    (let [custom-probes (or (expansion/load-custom-probes) [])
+          _ (when (seq custom-probes)
+              (println (str "Custom probes: " (count custom-probes))))
+          probe-list (into (vec probes/all-probes) custom-probes)
           results (core/run-probes probe-list)
           intersection (core/intersect results)
           density (core/category-density results)

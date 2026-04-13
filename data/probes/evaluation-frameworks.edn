@@ -1,0 +1,1 @@
+{:name "evaluation-frameworks", :query "\"logic model\" OR \"theory of change\" OR \"evaluation framework\" OR \"programme evaluation\" stars:>20 pushed:>2024-01-01", :per-page 30, :proximity :adjacent, :source "Day 1 workup: UKRN-S delivery, Bayesian evaluation consulting"}

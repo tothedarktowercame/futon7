@@ -1,0 +1,1 @@
+{:name "xtdb-users", :query "xtdb in:file filename:deps.edn stars:>5 pushed:>2024-01-01", :per-page 30, :proximity :neighborhood, :source "Day 1 workup: 'XTDB without Juxt' — who uses XTDB?"}
