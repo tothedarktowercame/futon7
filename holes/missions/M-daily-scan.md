@@ -164,3 +164,104 @@ A human has read this proposal and agrees that daily scanning is the
 right cadence, the 20-day test is the right evaluation frame, and
 the two-level accounting (local brief + frame derivative) is the
 right architecture.
+
+## 2. MAP
+
+### Q1: What probe infrastructure already exists?
+
+| Component | Status | Reuse? |
+|-----------|--------|--------|
+| `f7/probes.clj` — 10 probe categories (3 tiers) | Operational | Yes — reuse as-is for initial scans |
+| `f7/gh.clj` — GitHub API wrapper with EDN cache | Operational | Yes — `gh` CLI authenticated, cache layer ready |
+| `f7/signals.clj` — 6 signal extractors, scoring | Operational | Yes — scoring function is pure |
+| `f7/report.clj` — Markdown report with lead tiers | Operational (not run) | Adapt — needs delta mode (what changed since yesterday) |
+| `f7/core.clj` — Orchestrator: run → density → intersect → gaps | Operational | Adapt — needs incremental/delta variant |
+| `bb.edn` — `bb lead-report` task | Operational | Extend — add `bb daily-scan` task |
+| `analysis-demo/` — value-flow model, invoices | Stale (2025-03) | Reference only — separate pipeline |
+| `data/cache/` — GitHub API cache | Empty | Will populate on first run |
+
+**Verdict:** The probe infrastructure is operational and can run today.
+The main gap is *delta detection* — the existing code does full scans,
+not incremental "what changed since yesterday."
+
+### Q2: GitHub API rate limits for daily use
+
+- Search API: 30 requests/min, 1000 results/search
+- Core API: 5000 requests/hour (authenticated)
+- 10 probes × ~3 API calls each = ~30 calls per scan
+- Cache layer means repeated runs within a day are free
+- **Verdict:** Daily scanning is well within rate limits
+
+### Q3: What does the daily brief need to contain?
+
+A 5-minute-readable brief, produced each weekday:
+
+1. **Delta summary** — new repos since last scan, repos with changed
+   signals (gained funding, license change, new enterprise keywords)
+2. **Top 3 items** — highest-priority items worth Joe's attention today
+3. **Hot lead update** — any movement in previously identified hot/warm leads
+4. **Capacity match** — for the top items, which of Joe's capacities
+   align (Bayesian modelling, pattern languages, hypergraph tooling, etc.)
+5. **Workup suggestion** — what targeted response could Joe prepare in
+   the remaining 55 minutes of the daily hour
+
+### Q4: How does evidence emission work?
+
+The brief should be emitted as a futon1a evidence entry:
+```
+{:evidence/type "scan-brief"
+ :evidence/claim-type "observation"
+ :evidence/author "joe"
+ :evidence/session-id <session-id>
+ :evidence/body {:date "2026-04-14"
+                 :items-scanned N
+                 :new-items N
+                 :hot-leads [...]
+                 :workup-done? bool}}
+```
+
+This can be done via `curl POST` to futon1a's evidence endpoint,
+or via the existing `arxana-store-emit-evidence!` in Emacs.
+
+### Q5: Structural dependency on M-war-machine
+
+M-war-machine is not just a *consumer* of scan data. It is a
+*supplier* of interpretive structure to M-daily-scan:
+
+| War Machine supplies | Daily Scan uses it for |
+|---------------------|----------------------|
+| Cardinal directions (foraging/cargo/depositing/hermit) | Classifying each day's work: was today depositing or foraging? |
+| Frame derivative schema | Logging the scan as a typed event with known effects |
+| Mana accounting model | Evaluating whether the 20h investment is "paying off" |
+| Hobbes response (coordination without sovereignty) | The scan IS nomadic practice — it responds to signals, not commands |
+| Sorry topology | Connecting scan items to SORRY-market-interface |
+
+M-daily-scan supplies back:
+| Daily Scan supplies | War Machine uses it for |
+|--------------------|----------------------|
+| Actual depositing data | Moving the :depositing cardinal from 0 |
+| Pipeline status | Updating :income-deadline constraint from :no-pipeline |
+| futon7 hive health | Changing futon7 from :dormant to :active |
+| Evidence entries | Loop health — a new arrow fires |
+
+**This bidirectional dependency is itself a pattern:** the pattern
+of *mutual constitution* where infrastructure and practice co-produce
+each other. Without the War Machine's framework, the scan is just a
+cron job. Without the scan's data, the War Machine's frame has a
+zero-valued port.
+
+### Ready vs Missing
+
+| Component | Status | Work needed |
+|-----------|--------|-------------|
+| Probe categories | Ready | None |
+| GitHub API wrapper | Ready | None |
+| Signal extraction | Ready | None |
+| Full-scan orchestrator | Ready | None |
+| Cache layer | Ready | None |
+| Delta detection | Missing | Compare today's results to yesterday's cache |
+| Daily brief renderer | Missing | Markdown template with delta, top-3, capacity match |
+| `bb daily-scan` task | Missing | Wire delta + brief into bb task |
+| Evidence emission | Missing | POST to futon1a after each brief |
+| Emacs integration | Missing | `M-x f7-daily-brief` command |
+| 20-day tracking | Missing | Simple log of days completed + outcomes |
