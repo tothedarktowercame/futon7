@@ -276,10 +276,10 @@ posts, not just stored as EDN. Reasons:
 - A "capacity note" linking to relevant demonstrations (UKRN-S
   delivery, vsatelier, WebArxana, etc.)
 
-**Infrastructure note:** futon7a (Hyperreal website repo) is not
-present on this machine. It needs to be cloned or created. This is
-a dependency for the publication step but NOT for the scan itself —
-Day 1 can produce the brief locally; publication can start Day 2+.
+**Infrastructure:** futon7a is cloned at `~/code/futon7a`. It's a
+flat HTML site (19 pages, no blog structure). A `blog/` directory
+with an index and dated post files would be the simplest addition.
+Posts can be static HTML generated from the brief markdown.
 
 ### Q7: Existing consulting artefacts
 
@@ -308,5 +308,5 @@ Day 1 can produce the brief locally; publication can start Day 2+.
 | `bb daily-scan` task | Missing | Wire delta + brief into bb task |
 | Evidence emission | Missing | POST to futon1a after each brief |
 | Emacs integration | Missing | `M-x f7-daily-brief` command |
-| futon7a (website repo) | Missing on machine | Clone or create — needed for publication |
+| futon7a (website repo) | Cloned at ~/code/futon7a | Flat HTML site (19 pages), no blog dir yet — create one |
 | 20-day tracking | Missing | Simple log of days completed + outcomes |
