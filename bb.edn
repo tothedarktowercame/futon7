@@ -1,6 +1,9 @@
 {:paths ["src"]
  :deps {cheshire/cheshire {:mvn/version "5.13.0"}}
- :tasks {lead-report {:doc "Generate lead report from probe results"
+ :tasks {daily-scan {:doc "Run daily scan + produce brief"
+                     :requires ([f7.daily :as daily])
+                     :task (daily/-main)}
+         lead-report {:doc "Generate lead report from probe results"
                       :requires ([f7.report :as report])
                       :task (report/-main)}
          probe-gen {:doc "Generate probes from concept graph"
