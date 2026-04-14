@@ -1,0 +1,5 @@
+{:name "ai-governance-audit"
+ :query "\"AI governance\" OR \"model audit\" OR \"AI compliance\" OR \"responsible AI\" OR \"AI assurance\" stars:>50 pushed:>2024-01-01"
+ :per-page 30
+ :proximity :adjacent
+ :source "Day 2: adjacent to reproducibility — governance/audit is the commercial wrapper around testing"}

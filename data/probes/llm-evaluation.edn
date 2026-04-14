@@ -1,0 +1,5 @@
+{:name "llm-evaluation"
+ :query "\"LLM evaluation\" OR \"LLM testing\" OR \"prompt testing\" OR \"AI benchmark\" OR \"model evaluation\" stars:>100 pushed:>2024-01-01"
+ :per-page 30
+ :proximity :domain
+ :source "Day 2: LLM-specific testing/eval is the hot subsector of AI QA"}
