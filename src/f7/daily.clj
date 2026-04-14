@@ -116,64 +116,103 @@
 ;; Brief generation
 ;; ---------------------------------------------------------------------------
 
-(defn- top-items
-  "Pick the top N items from intersection, preferring new/changed."
-  [intersection delta n]
-  (let [new-set (set (:new-repos delta))
-        changed-set (set (:changed-repos delta))
-        prioritized (sort-by
-                     (fn [item]
-                       [(cond
-                          (contains? new-set (:full-name item)) 0
-                          (contains? changed-set (:full-name item)) 1
-                          :else 2)
-                        (- (:total-score item))])
-                     intersection)]
-    (take n prioritized)))
+(defn- probe-is-custom? [probe-name]
+  (.exists (io/file (str "data/probes/" probe-name ".edn"))))
+
+(defn- top-from-probe
+  "Best scoring items from a specific probe."
+  [probe-result n]
+  (->> (:results probe-result)
+       (filter #(pos? (get-in % [:signals :score])))
+       (sort-by #(- (get-in % [:signals :score])))
+       (take n)))
+
+(defn- render-item [repo signals]
+  (let [name (:full-name repo)
+        score (:score signals)
+        hard (->> (:hard signals)
+                  (filter :present?)
+                  (map #(str (clojure.core/name (:signal %))
+                             (when (:detail %) (str " (" (:detail %) ")")))))]
+    (str "- **" name "** (score:" score
+         " stars:" (:stars repo) ")"
+         (when (seq hard) (str " — " (str/join ", " hard)))
+         "\n")))
 
 (defn render-brief
-  "Produce a markdown brief from scan + delta."
+  "Produce a markdown brief from scan + delta.
+   Leads with new probe results. Suppresses stale repeats."
   [scan delta date]
-  (let [top (top-items (:intersection scan) delta 5)
-        new-count (count (:new-repos delta))
-        changed-count (count (:changed-repos delta))]
+  (let [results (:results scan)
+        ;; Separate new/custom probes from static probes
+        new-probe-results (filter #(probe-is-custom? (get-in % [:probe :name])) results)
+        static-probe-results (remove #(probe-is-custom? (get-in % [:probe :name])) results)
+        ;; Items from yesterday (to suppress)
+        prev-intersection-names (set (or (:prev-intersection-names delta) []))
+        ;; New intersection items only
+        new-intersection (->> (:intersection scan)
+                              (filter #(contains? (set (:new-repos delta)) (:full-name %))))]
     (str
      "# Daily Scan Brief — " date "\n\n"
-     "**Probes:** " (:probe-count scan) " | "
-     "**Repos scanned:** " (:total-repos scan) " | "
-     "**In intersection:** " (count (:intersection scan)) "\n\n"
-     (if (:first-scan? delta)
-       "*First scan — no delta available.*\n\n"
-       (str "**Delta:** " new-count " new, "
-            changed-count " changed, "
-            (count (:lost-repos delta)) " dropped\n\n"))
-     "## Top Items\n\n"
-     (str/join "\n"
-               (map-indexed
-                (fn [i item]
-                  (let [tag (cond
-                              (contains? (set (:new-repos delta)) (:full-name item)) "NEW"
-                              (contains? (set (:changed-repos delta)) (:full-name item)) "CHANGED"
-                              :else "")]
-                    (str "### " (inc i) ". " (:full-name item)
-                         (when (seq tag) (str " [" tag "]"))
-                         "\n"
-                         "- **Probes:** " (:probe-count item)
-                         " | **Score:** " (:total-score item)
-                         " | **In:** " (str/join ", " (:probes item)) "\n"
-                         "- **Signals:** "
-                         (str/join ", " (->> (:all-hard-signals item)
-                                             (filter :present?)
-                                             (map #(str (name (:signal %))
-                                                        (when (:detail %) (str " (" (:detail %) ")"))))))
-                         "\n"
-                         "- **Capacity match:** _TODO — what could Joe offer here?_\n")))
-                top))
-     "\n\n## Workup\n\n"
-     "_Spend the remaining time on the most promising item above._\n"
-     "_What targeted response could you prepare? (Bayesian model, flexiarg, capability demo)_\n\n"
+     "**Probes:** " (:probe-count scan)
+     " (" (count new-probe-results) " custom, "
+     (count static-probe-results) " static)"
+     " | **Repos scanned:** " (:total-repos scan) "\n\n"
+
+     ;; === Section 1: New probe highlights ===
+     (when (seq new-probe-results)
+       (str "## Today's Focus\n\n"
+            (str/join "\n"
+                      (for [pr new-probe-results
+                            :let [probe (:probe pr)
+                                  source (:source probe)
+                                  top (top-from-probe pr 3)]
+                            :when (seq top)]
+                        (str "### " (:name probe) "\n"
+                             (when source (str "*" source "*\n"))
+                             "\n"
+                             (str/join "" (map #(render-item (:repo %) (:signals %)) top))
+                             "\n")))
+            "\n"))
+
+     ;; === Section 2: New intersection items (if any) ===
+     (when (seq new-intersection)
+       (str "## New Cross-Probe Hits\n\n"
+            (str/join ""
+                      (map (fn [item]
+                             (str "- **" (:full-name item) "** — in "
+                                  (str/join " ∩ " (:probes item))
+                                  " (score:" (:total-score item) ")\n"))
+                           new-intersection))
+            "\n"))
+
+     ;; === Section 3: Static probe notable items (only if new/changed) ===
+     (let [static-new (for [pr static-probe-results
+                            :let [top (top-from-probe pr 1)
+                                  item (first top)]
+                            :when (and item
+                                       (not (contains? prev-intersection-names
+                                                       (get-in item [:repo :full-name]))))]
+                        {:probe-name (get-in pr [:probe :name])
+                         :item item})]
+       (when (seq static-new)
+         (str "## Static Probe Updates\n\n"
+              "_Showing top item per probe (suppressing yesterday's repeats)_\n\n"
+              (str/join ""
+                        (for [{:keys [probe-name item]} static-new]
+                          (str "**" probe-name ":** "
+                               (get-in item [:repo :full-name])
+                               " (score:" (get-in item [:signals :score])
+                               " stars:" (get-in item [:repo :stars]) ")\n")))
+              "\n")))
+
+     "## Workup\n\n"
+     "_Focus on the Today's Focus section. What connections do you see?_\n"
+     "_What could you offer to the most interesting items above?_\n\n"
      "---\n"
-     "*Generated by `bb daily-scan` for M-daily-scan.*\n")))
+     "*Generated by `bb daily-scan` for M-daily-scan. Day "
+     (if-let [prev (latest-scan-before date)] "2+" "1")
+     ".*\n")))
 
 ;; ---------------------------------------------------------------------------
 ;; Main
