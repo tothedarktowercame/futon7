@@ -1,1 +1,0 @@
-{:name "xanadu-hypertext", :query "xanadu OR \"transclusion\" OR \"bidirectional link\" OR \"knowledge graph editor\" stars:>20 pushed:>2024-01-01", :per-page 30, :proximity :domain, :source "Day 1 workup: WebArxana as Xanadu clone, not Roam clone"}
