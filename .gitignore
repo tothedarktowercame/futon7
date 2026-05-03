@@ -2,3 +2,7 @@ data/cache/
 data/results/
 .nrepl-port
 .cpcache/
+data/briefs/
+data/daily/
+data/frames/
+data/probes/
