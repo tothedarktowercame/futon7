@@ -1,1 +1,0 @@
-{:name "variational-inference", :query "\"variational inference\" OR \"amortized inference\" OR \"structured beliefs\" stars:>50 pushed:>2024-01-01", :per-page 30, :proximity :adjacent, :source "Day 1 workup: Datahike principal's PhD thesis"}

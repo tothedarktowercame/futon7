@@ -1,5 +1,0 @@
-{:name "evaluation-frameworks"
- :query "\"programme evaluation\" OR \"training evaluation\" OR \"impact evaluation\" OR \"realist evaluation\" OR \"theory of change\" stars:>10 pushed:>2024-01-01"
- :per-page 30
- :proximity :adjacent
- :source "Day 2 refinement: narrowed from generic 'evaluation' to programme/training/impact evaluation — Joe's actual UKRN-S delivery area. Removed 'logic model' and 'evaluation framework' which pull in SLAM benchmarks and R libraries."}

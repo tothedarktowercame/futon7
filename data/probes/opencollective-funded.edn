@@ -1,1 +1,0 @@
-{:name "opencollective-funded", :query "open_collective in:file filename:FUNDING.yml language:Clojure pushed:>2024-01-01", :per-page 30, :proximity :neighborhood, :source "Day 1 workup: Logseq's OpenCollective balance"}

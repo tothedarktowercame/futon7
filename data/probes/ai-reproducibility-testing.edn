@@ -1,5 +1,0 @@
-{:name "ai-reproducibility-testing"
- :query "\"AI testing\" OR \"ML testing\" OR \"AI QA\" OR \"model testing\" OR \"AI reproducibility\" stars:>30 pushed:>2024-01-01"
- :per-page 30
- :proximity :domain
- :source "Day 2: warm contact intel — reproducibility in applied AI, AI makes behaviour unpredictable, testing/QA need new approaches"}
