@@ -1,8 +1,11 @@
 {:paths ["src"]
  :deps {cheshire/cheshire {:mvn/version "5.13.0"}}
- :tasks {daily-scan {:doc "Run daily scan + produce brief"
+ :tasks {daily-scan {:doc "Run daily scan + produce brief (main/consulting axis). Accepts --axis NAME."
                      :requires ([f7.daily :as daily])
-                     :task (daily/-main)}
+                     :task (apply daily/-main *command-line-args*)}
+         daily-scan-lean {:doc "Run :lean subseries scan (ICARM/Lean/superpod-mining axis)"
+                          :requires ([f7.daily :as daily])
+                          :task (daily/-main "--axis" "lean")}
          lead-report {:doc "Generate lead report from probe results"
                       :requires ([f7.report :as report])
                       :task (report/-main)}

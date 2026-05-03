@@ -16,25 +16,40 @@
 
 (def ^:private custom-probes-dir "data/probes")
 
+(defn axis-dir
+  "Resolve custom-probes directory for AXIS.
+   nil or \"main\" → data/probes (existing consulting probes).
+   Any other axis → data/probes/<axis> (subseries probes)."
+  [axis]
+  (if (or (nil? axis) (= axis "main"))
+    custom-probes-dir
+    (str custom-probes-dir "/" axis)))
+
 (defn load-custom-probes
-  "Load all custom probe definitions from data/probes/*.edn."
-  []
-  (let [dir (io/file custom-probes-dir)]
-    (when (.exists dir)
-      (->> (.listFiles dir)
-           (filter #(str/ends-with? (.getName %) ".edn"))
-           (mapv #(try (read-string (slurp %))
-                       (catch Exception _ nil)))
-           (filterv some?)))))
+  "Load custom probe definitions for AXIS.
+   nil/\"main\" loads data/probes/*.edn (immediate children only —
+   subseries subdirectories are skipped because directory names
+   don't end in .edn).  Other axes load data/probes/<axis>/*.edn."
+  ([] (load-custom-probes nil))
+  ([axis]
+   (let [dir (io/file (axis-dir axis))]
+     (when (.exists dir)
+       (->> (.listFiles dir)
+            (filter #(.isFile %))
+            (filter #(str/ends-with? (.getName %) ".edn"))
+            (mapv #(try (read-string (slurp %))
+                        (catch Exception _ nil)))
+            (filterv some?))))))
 
 (defn save-custom-probe!
-  "Save a custom probe definition to data/probes/<name>.edn."
-  [{:keys [name] :as probe}]
-  (let [path (str custom-probes-dir "/" name ".edn")]
-    (io/make-parents path)
-    (spit path (pr-str probe))
-    (println (str "Saved custom probe: " path))
-    probe))
+  "Save a custom probe definition to data/probes[/axis]/<name>.edn."
+  ([probe] (save-custom-probe! probe nil))
+  ([{:keys [name] :as probe} axis]
+   (let [path (str (axis-dir axis) "/" name ".edn")]
+     (io/make-parents path)
+     (spit path (pr-str probe))
+     (println (str "Saved custom probe: " path))
+     probe)))
 
 ;; ---------------------------------------------------------------------------
 ;; Workup-derived probes (Day 1 results)
